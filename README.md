@@ -1,5 +1,4 @@
-# ⚡ Energy Infrastructure Analytics App
-
+# ⚡ DFW Commercial Rooftop Solar Energy & Grid Readiness Analysis 
 A geospatial analytics project focused on finding the strongest clean-energy opportunity sites across the Dallas–Fort Worth area.
 
 I built this project to answer a practical planning question:
