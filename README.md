@@ -169,7 +169,7 @@ Thresholds:
 ![Overview](docs/images/Figure1_Overview.png)
 
 **Interactive Folium Map**
-Open `outputs/maps/DFW_Energy_Map_Filtered_With_Asset_List.html` in any browser.
+Open `file:///C:/Users/Admin/Downloads/DFW_Solar_Repo/outputs/maps/DFW_Energy_Map_Filtered_With_Asset_List.html` in any browser.
 
 **Power BI Dashboard**
 Open `outputs/dashboard/Building Asset Mapping.pbix` in Power BI Desktop.
