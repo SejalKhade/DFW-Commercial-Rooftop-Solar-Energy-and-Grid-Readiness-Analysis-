@@ -33,15 +33,15 @@ End-to-end geospatial analytics pipeline assessing rooftop solar energy potentia
 *Full DFW portfolio: 8,612 buildings, 15.71M MWh/year, $19.56B install cost, 5.26M tons CO₂ reduction/year. Dallas leads with 5,066 assets generating 8.12M MWh/year.*
 
 ### Power BI Dashboard — Filtered View (Office Buildings)
-![Power BI Dashboard Filtered](images/dashboard_filtered.png)
+![Power BI Dashboard Filtered](Images/dashboard_filtered.png)
 *Office building segment: 2,260 assets, 2.65M MWh/year, 886.63K tons CO₂, $3.30B cost. Sankey chart shows building type to energy generation flow.*
 
 ### Interactive Folium Map — Urban Dallas (Medium Generation, High Household, High EV)
-![Folium Map Urban Dallas](images/map_urban_dallas.png)
+![Folium Map Urban Dallas](Images/map_urban_dallas.png)
 *57 assets matching Medium generation + High household density + High EV infrastructure. Strategic interpretation: "Above average solar potential in densely populated areas with established EV infrastructure."*
 
 ### Interactive Folium Map — Suburban/Highway Corridor (Medium Generation, Low Household, High EV)
-![Folium Map Suburban](images/map_suburban.png)
+![Folium Map Suburban](Images/map_suburban.png)
 *32 assets matching Medium generation + Low household density + High EV infrastructure. Strategic interpretation: "Likely highway rest stops or suburban retail centers. Solar panels can help offset the cost of running these public charging stations."*
 
 ---
