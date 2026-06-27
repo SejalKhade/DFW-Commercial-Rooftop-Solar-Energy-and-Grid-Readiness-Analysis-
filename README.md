@@ -291,13 +291,6 @@ DFW-Commercial-Rooftop-Solar-Energy-and-Grid-Readiness-Analysis/
 - Install cost uses 2025 NREL benchmark ($2.00/Wdc) — actual costs vary by contractor and site conditions
 - CAPEX financing, grid interconnection costs, and permitting fees excluded from cost model
 
----
-
-## Citation
-
-Khade, S. (2026). *Rooftop Solar Energy Potential of Large Commercial and Industrial Buildings in the Dallas-Fort Worth Metroplex.* University of Texas at Arlington, M.S. Data Science.
-
----
 
 ## Author
 
