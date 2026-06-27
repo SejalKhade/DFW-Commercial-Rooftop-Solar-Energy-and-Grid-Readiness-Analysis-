@@ -29,7 +29,7 @@ End-to-end geospatial analytics pipeline assessing rooftop solar energy potentia
 ## Screenshots
 
 ### Power BI Dashboard — Full Portfolio View
-![Power BI Dashboard Full Portfolio](images/dashboard_full.png)
+![Power BI Dashboard Full Portfolio](Images/dashboard_full.png)
 *Full DFW portfolio: 8,612 buildings, 15.71M MWh/year, $19.56B install cost, 5.26M tons CO₂ reduction/year. Dallas leads with 5,066 assets generating 8.12M MWh/year.*
 
 ### Power BI Dashboard — Filtered View (Office Buildings)
