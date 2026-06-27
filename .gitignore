@@ -1,0 +1,15 @@
+# Large HTML map (31MB - too big for GitHub)
+DFW_Energy_Map (14)*.html
+DFW_Energy_Map*(1).html
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+__pycache__/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+street_checkpoint.csv
