@@ -1,191 +1,124 @@
-# DFW Commercial Rooftop Solar Energy & Grid Readiness Analysis
+# DFW Commercial Rooftop Solar & EV Grid Readiness Analysis
 
-End-to-end geospatial analytics pipeline assessing rooftop solar energy potential,
-CO₂ reduction, installation costs, and EV charging infrastructure gaps for **8,612
-large commercial and industrial buildings** across **11 DFW counties** — integrating
-OSMnx, US Census ACS5, EPA eGRID, and NREL data into interactive Folium maps,
-spatial regression models, and a Power BI dashboard.
+Geospatial pipeline that identifies **which commercial buildings in Dallas–Fort Worth should get rooftop solar first** — and where EV charging infrastructure is missing. Built across 8,612 large buildings in 11 counties using open data (OpenStreetMap, US Census, NREL, EPA) and Python geospatial tools.
 
-[![Python](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)
-[![GeoPandas](https://img.shields.io/badge/spatial-GeoPandas-green.svg)](https://geopandas.org/)
-[![Power BI](https://img.shields.io/badge/dashboard-Power%20BI-yellow.svg)](https://powerbi.microsoft.com/)
+[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
+[![GeoPandas](https://img.shields.io/badge/GeoPandas-GIS-green.svg)](https://geopandas.org/)
+[![Folium](https://img.shields.io/badge/Folium-Interactive%20Maps-teal.svg)](https://python-visualization.github.io/folium/)
+[![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-yellow.svg)](https://powerbi.microsoft.com/)
 
 ---
 
-## Key Results
+## What This Project Does
+
+1. **Pulls** every large commercial/industrial building (≥ 20,000 sq ft) from OpenStreetMap across 11 DFW counties
+2. **Models** rooftop solar generation for each building using the PV equation `E = A × r × H × PR` with NREL irradiance data
+3. **Enriches** each building with nearby household count (Census ACS5), EV charging station count (NREL AFDC), CO₂ savings, and installation cost
+4. **Scores and maps** buildings across 27 strategic combinations of solar potential, household access, and EV infrastructure to surface the highest-impact deployment targets
+5. **Runs spatial regression** (OLS → Moran's I → Spatial Error Model) at census-tract level to quantify where solar potential clusters and where EV gaps are largest
+
+---
+
+## Results at a Glance
 
 | Metric | Value |
 |---|---|
-| Buildings analyzed | **8,612** large commercial & industrial (≥ 20,000 sq ft) |
-| Counties covered | **11** DFW counties |
-| Total annual energy potential | **15,706 GWh/year** (15.71M MWh/year) |
-| CO₂ emissions avoided | **5.261 Million metric tons/year** |
-| Total installation cost | **$19.56 Billion** (NREL benchmark $2.00/W) |
-| Households powered (ERCOT) | **1,194,170** |
-| Median building size | 42,365 sq ft |
-| Median output per building | 822 MWh/year |
-| Buildings with zero EV stations within 1 mi | **2,609 (30.3%)** |
-| Buildings costing < $2M to install | **6,481 (75.3%)** |
-| Dallas County share | **51.7%** of total generation (5,066 assets) |
-| Top 4 counties (Dallas/Tarrant/Denton/Collin) | **94.9%** of total energy |
-| Peak monthly output (July) | 1.570 Billion kWh |
-| Trough monthly output (December) | 0.957 Billion kWh |
+| Buildings analyzed | **8,612** across 11 counties |
+| Total annual solar potential | **15,706 GWh/year** |
+| CO₂ emissions avoided | **5.261 M metric tons/year** |
+| Households powered (ERCOT grid) | **1,194,170** |
+| Total installation cost | **$19.56 Billion** |
+| Buildings with **zero** EV stations within 1 mile | **2,609 (30.3%)** — prime co-deployment targets |
+| Buildings costing **< $2M** to install | **6,481 (75.3%)** — accessible via PPA / C-PACE financing |
+| Top 10% of buildings by size | → **50% of total energy** (Pareto effect) |
+| Dallas County share | **51.7%** of total generation |
 
 ---
 
-## Building Type Breakdown
+## Maps
 
-| Building Type | Count | Share | Annual MWh/yr | CO₂ Avoided (M t/yr) |
-|---|---|---|---|---|
-| Commercial | 2,562 | 29.75% | 2,519,897 | 0.844 |
-| Retail | 2,260 | 26.24% | 2,646,662 | 0.887 |
-| Warehouse | 1,929 | 22.40% | 5,535,449 | 1.854 |
-| Industrial | 1,283 | 14.90% | 4,490,801 | 1.504 |
-| Office | 576 | 6.69% | 510,047 | 0.171 |
-| Supermarket | 2 | 0.02% | 2,859 | 0.001 |
+### Interactive Strategic Filter Map
+`maps/DFW_Energy_Map.html` — open in any browser
 
-**Warehouse + Industrial = 37.3% of buildings but 63.84% of total energy (1.71× concentration)**
+Filter 8,612 buildings by **Annual Generation tier**, **Household Population proximity**, and **EV Infrastructure density** simultaneously. Each building shows building type, annual MWh, and location. Sidebar lists all assets matching the active filter.
+
+![Interactive Map — Urban Dallas](Images/map_urban_dallas.png)
+*Inner Dallas cluster — colour = building type, marker size = energy potential*
+
+![Interactive Map — Full Metroplex](Images/map_suburban.png)
+*Full 11-county coverage — warehouse/industrial corridors visible in south Dallas and west Tarrant*
 
 ---
 
-## Visualizations
+### Census-Tract EV & Solar Priority Map
+`maps/DFW_Interactive_Tract_EV_Solar_Map.html` — open in any browser
 
-### Building Type Analysis
-![Building Type Analysis](Images/01_building_type.png)
-*4-panel: building count, total annual energy (MWh/yr), CO₂ avoided, installation cost by building type. Warehouses and industrial lead energy output despite being fewer in number.*
+Bivariate choropleth showing **solar potential per household × EV station presence** for every census tract. Highlights tracts that are high solar / no stations — the best targets for combined solar + EV investment.
 
-### County-Level 4-Panel Analysis
-![County Panels](Images/01b_county_panels.png)
-*Same 4 metrics broken down across all 11 DFW counties. Dallas dominates at 51.7% of portfolio energy.*
-
-### Building Type Share: Count vs Energy
-![Building Type Pie](Images/02_building_type_pie.png)
-*Paired pie charts: warehouse expands from 22.4% → 35.24% of energy; commercial contracts from 29.75% → 16.04%. Count-based targeting would systematically misallocate resources.*
-
-### County Solar Analysis
-![County Analysis](Images/03_county_analysis.png)
-*County-level energy, building count, and installation cost. Collin–Denton rank reversal visible: Denton ranks 3rd by energy despite 4th by count.*
-
-### Energy Concentration (Pareto Curve)
-![Pareto Energy](Images/05_pareto_energy.png)
-*Top 10.3% of buildings (889 assets) → 50% of energy. Top 40.4% (3,483 assets) → 80%. A first-wave programme targeting the top decile captures half the portfolio at 9.7× less scope.*
-
-### Building Size Distribution
-![Building Size Distribution](Images/06_building_size_dist.png)
-*57.4% of buildings fall in the 20K–50K sq ft bracket; only 266 (3.1%) exceed 500K sq ft — these outliers drive the steep Pareto curve.*
-
-### Carbon Emission Reduction
-![Carbon Analysis](Images/07_carbon_analysis.png)
-*CO₂ avoidance by building type and county using ERCOT factor 0.386 kg/kWh. Dallas County: 2.721M metric tons/year.*
-
-### Installation Cost Analysis
-![Cost Analysis](Images/08_cost_analysis.png)
-*75.3% of buildings cost < $2M to install — within reach of PPAs and C-PACE financing. Only 49 buildings (0.57%) exceed $25M.*
-
-### Household Proximity Scatter
-![Household Scatter](Images/09_household_scatter.png)
-*Pearson r = −0.193 (1 mi) and −0.227 (3 mi): the highest-generation buildings are systematically located in less residentially dense areas — the core equity-vs-efficiency planning tension.*
-
-### Solar Potential Per Capita Map
-![Per Capita Map](Images/09_percapita_map.png)
-*Census-tract-level choropleth of MWh per household. Suburban and exurban tracts show outsized solar potential relative to population.*
-
-### EV Charging Station Proximity
-![EV Analysis](Images/10_ev_analysis.png)
-*Distribution of EV stations within 1-mile buffer. 30.3% of buildings have zero stations — prime co-deployment targets.*
-
-### EV Service Gap Map
 ![EV Service Gap Map](Images/11_ev_service_gap_map.png)
-*Spatial distribution of EV infrastructure gaps. Red/orange = high solar potential with no EV stations nearby — highest-priority combined investment zones.*
-
-### Pearson Correlation Matrix
-![Pearson Correlation](Images/12_pearson_correlation.png)
-*Correlation between building size, household density (1mi/3mi), EV station counts (1mi/3mi), latitude, and longitude.*
-
-### Monthly Solar Output
-![Seasonal Output](Images/14_seasonal_output.png)
-*Monthly fleet output vs NREL peak sun hours. July peak = 1.570B kWh; December trough = 0.957B kWh. Peaks align with ERCOT summer demand — defers investment in peaking capacity.*
-
-### Power BI Dashboard — Full Portfolio View
-![Power BI Dashboard Full Portfolio](Images/dashboard_full.png)
-*Full DFW portfolio overview: 8,612 buildings, 15.71M MWh/year, $19.56B install cost, 5.26M tons CO₂/year.*
-
-### Power BI Dashboard — Filtered View
-![Power BI Dashboard Filtered](Images/dashboard_filtered.png)
-*Filtered segment view with Sankey chart showing building type to energy generation flow.*
-
-### Interactive Map — Urban Dallas
-![Map Urban Dallas](Images/map_urban_dallas.png)
-*Interactive Folium map — inner Dallas cluster showing building type colour coding and marker size scaled to energy potential.*
-
-### Interactive Map — Suburban Coverage
-![Map Suburban](Images/map_suburban.png)
-*Outer-county and suburban building distribution across the full 11-county study area.*
+*Red/orange = high solar potential with no EV stations nearby. These tracts are the highest-priority zones for combined investment.*
 
 ---
 
-## Spatial Statistics (Sections 16–31)
+### Solar Potential Per Household Map
+![Per Capita Solar Map](Images/09_percapita_map.png)
+*Census-tract choropleth of MWh per household. Suburban and exurban tracts show outsized solar potential relative to residential density.*
 
-The second half of the analysis moves from building-level to census-tract-level statistics.
+---
 
-- **OLS Regression** — solar potential vs household density per tract
-- **Moran's I** — spatial autocorrelation test on OLS residuals (significant positive clustering confirmed, p < 0.05)
-- **Spatial Error Model** (spreg/libpysal) — corrects for spatial autocorrelation, better fit than OLS alone
-- **Bivariate choropleth** — census-tract map of solar potential per household × EV station presence
+### Power BI Dashboard
+`dashboard/Building_Asset_Mapping.pbix`
 
-**4-way EV priority classification per census tract:**
+![Power BI Full Portfolio](Images/dashboard_full.png)
+*Portfolio overview: 8,612 buildings, 15.71M MWh/yr, $19.56B cost, 5.26M tons CO₂/year*
 
-| Category | Description |
+![Power BI Filtered View](Images/dashboard_filtered.png)
+*Segment drill-down with Sankey chart showing building type → energy generation flow*
+
+---
+
+## Key Findings
+
+- **Warehouse and industrial buildings** = 37% of buildings but **64% of total energy**. Targeting them first is 1.7× more efficient than uniform deployment.
+- **30.3% of buildings** have zero EV stations within 1 mile — a co-deployment opportunity where one investment delivers both solar and EV charging.
+- **Solar peaks in July** (1.57B kWh) — perfectly aligned with ERCOT's summer demand peak from AC load, making this a grid-stability investment, not just a green one.
+- **75% of buildings cost under $2M** to install — within standard commercial financing, no public subsidy required.
+
+---
+
+## Tech Stack
+
+| | Tools |
 |---|---|
-| High solar / No station | Top priority — combined solar + EV investment |
-| High solar / Station present | Solar-only opportunity |
-| Low solar / No station | EV-only opportunity |
-| Low solar / Station present | Lower priority |
+| **GIS & Spatial** | OSMnx · GeoPandas · Shapely · EPSG:2276 reprojection · 1-mi & 3-mi buffer analysis · areal interpolation |
+| **Maps** | Folium / Leaflet.js · choropleth layers · multi-select buffer zone map · 27-category strategic filter |
+| **Data** | pandas · NumPy · US Census ACS5 API · NREL AFDC API · Nominatim geocoding |
+| **Spatial Stats** | OLS (statsmodels) · Moran's I (esda) · Spatial Error Model (spreg) · libpysal weights |
+| **Dashboard** | Power BI |
+| **Viz** | Matplotlib · Seaborn |
+| **Environment** | Python 3.11 · Google Colab · Jupyter |
 
 ---
 
-## Technologies & Skills Used
-
-| Category | Tools |
-|---|---|
-| **GIS & Geospatial** | OSMnx, GeoPandas, Shapely, EPSG:2276 reprojection, 1-mi & 3-mi spatial buffers, areal interpolation |
-| **Interactive Mapping** | Folium (Leaflet.js), choropleth layers, multi-select buffer zone map, 27-category strategic filter map |
-| **Data Engineering** | pandas, NumPy, US Census ACS5 API, NREL AFDC API, Nominatim geocoding (cached) |
-| **Solar Modeling** | NREL NSRDB irradiance (H = 2007.5 kWh/m²/yr), PV equation E = A × r × H × PR, ERCOT 0.386 kg CO₂/kWh |
-| **Spatial Statistics** | OLS (statsmodels), Moran's I (esda), Spatial Error Model (spreg), libpysal weights matrix |
-| **Visualization** | Matplotlib, Seaborn, Power BI |
-| **Environment** | Python 3.11, Google Colab, Jupyter Notebook |
-
----
-
-## Repository Structure
+## Repo Structure
 
 ```
 notebooks/
-  dfw_energy_analysis_final.ipynb        — complete pipeline (OSM → solar model →
-                                           spatial stats → extraction zip)
-  01_Asset_Data_Set.ipynb                — initial OSM asset pull
-  02_Restarting_Energy_Project.ipynb
-  03_CO2_cost_calculation.ipynb
-  04_Forming_categories.ipynb
-  DFW_Solar_Publication_Final.ipynb      — earlier publication draft
+  dfw_energy_analysis_final.ipynb   ← run this (full pipeline end-to-end)
 
 processed/
-  final_solar_estimates.csv              — 8,612 buildings, all derived metrics
-  DFW_Assets_Master.csv / .geojson       — enriched building dataset
-  DFW_Assets_Enriched.csv
+  final_solar_estimates.csv         ← 8,612 buildings with all metrics
+  DFW_Assets_Master.csv / .geojson
   EV_Stations_DFW.csv
   DFW_Census_Households.csv
-  street_checkpoint.csv                  — Nominatim cache (saves ~2.5 hrs on re-run)
+  street_checkpoint.csv             ← Nominatim geocoding cache (saves ~2.5 hrs)
 
 maps/
-  DFW_Energy_Map.html                    — interactive strategic filter map (27 categories)
-  DFW_Interactive_Tract_EV_Solar_Map.html — census-tract EV + solar bivariate map
-
-Images/                                  — 15 analysis charts + Power BI screenshots
+  DFW_Energy_Map.html               ← interactive strategic filter map
+  DFW_Interactive_Tract_EV_Solar_Map.html  ← census-tract EV + solar map
 
 dashboard/
-  Building_Asset_Mapping.pbix            — Power BI dashboard
+  Building_Asset_Mapping.pbix       ← Power BI
 
 category_reference/
   27_strategic_category_interpretations.xlsx
@@ -193,28 +126,17 @@ category_reference/
 
 ---
 
-## Running the Notebook
+## How to Run
 
-Open `notebooks/dfw_energy_analysis_final.ipynb` in Google Colab or Jupyter and run all cells.
+Open `notebooks/dfw_energy_analysis_final.ipynb` in **Google Colab** or Jupyter. Requires two free API keys:
 
-**Required API keys (both free):**
-- Census API → https://api.census.gov/data/key_signup.html
-- NREL API → https://developer.nrel.gov/signup/
+- Census: https://api.census.gov/data/key_signup.html
+- NREL: https://developer.nrel.gov/signup/
 
-Set as Colab Secrets (`CENSUS_API_KEY`, `NREL_API_KEY`) or environment variables.
-
-> `processed/street_checkpoint.csv` caches 8,500/8,612 Nominatim lookups — only ~112 buildings need geocoding on a fresh run (~2 min vs ~2.5 hrs without it).
+Set as Colab Secrets (`CENSUS_API_KEY`, `NREL_API_KEY`). The geocoding cache (`street_checkpoint.csv`) is pre-loaded so a fresh run takes minutes, not hours.
 
 ---
 
 ## Data Sources
 
-| Source | Used for |
-|---|---|
-| OpenStreetMap via OSMnx | Building footprints and type classification |
-| US Census Bureau ACS5 2024 | Household counts per tract and ZCTA |
-| US Census TIGER 2025 | Tract and ZCTA boundary shapefiles |
-| NREL Alternative Fuel Stations API | EV charging station locations |
-| NREL NSRDB | Solar irradiance (H = 2007.5 kWh/m²/yr) |
-| EPA eGRID (ERCOT region) | CO₂ emission factor (0.386 kg/kWh) |
-| NREL cost benchmark | Installation cost ($2.00/W) |
+OpenStreetMap (OSMnx) · US Census ACS5 2024 · US Census TIGER 2025 · NREL AFDC API · NREL NSRDB · EPA eGRID ERCOT (0.386 kg CO₂/kWh) · NREL cost benchmark ($2.00/W)
