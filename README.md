@@ -1,10 +1,10 @@
-# DFW Commercial Rooftop Solar & EV Grid Readiness Analysis
+# DFW Commercial Rooftop Solar & EV Grid Readiness Analysis — GIS Pipeline
 
-Geospatial pipeline that identifies **which commercial buildings in Dallas–Fort Worth should get rooftop solar first** — and where EV charging infrastructure is missing. Built across 8,612 large buildings in 11 counties using open data (OpenStreetMap, US Census, NREL, EPA) and Python geospatial tools.
+**GIS-based** geospatial pipeline that identifies which commercial buildings in Dallas–Fort Worth should get rooftop solar first — and where EV charging infrastructure is missing. Covers 8,612 large buildings across 11 counties using OpenStreetMap, US Census, NREL, and EPA open data.
 
 [![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
-[![GeoPandas](https://img.shields.io/badge/GeoPandas-GIS-green.svg)](https://geopandas.org/)
-[![Folium](https://img.shields.io/badge/Folium-Interactive%20Maps-teal.svg)](https://python-visualization.github.io/folium/)
+[![GIS](https://img.shields.io/badge/GIS-GeoPandas%20%7C%20OSMnx%20%7C%20Folium-brightgreen.svg)](https://geopandas.org/)
+[![Spatial Stats](https://img.shields.io/badge/Spatial%20Stats-Moran's%20I%20%7C%20SEM-orange.svg)](https://pysal.org/)
 [![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-yellow.svg)](https://powerbi.microsoft.com/)
 
 ---
@@ -90,7 +90,7 @@ Bivariate choropleth showing **solar potential per household × EV station prese
 
 | | Tools |
 |---|---|
-| **GIS & Spatial** | OSMnx · GeoPandas · Shapely · EPSG:2276 reprojection · 1-mi & 3-mi buffer analysis · areal interpolation |
+| **GIS** | OSMnx · GeoPandas · Shapely · EPSG:2276 (NAD83 Texas North Central) reprojection · 1-mi & 3-mi spatial buffer analysis · areal interpolation · census-tract spatial joins |
 | **Maps** | Folium / Leaflet.js · choropleth layers · multi-select buffer zone map · 27-category strategic filter |
 | **Data** | pandas · NumPy · US Census ACS5 API · NREL AFDC API · Nominatim geocoding |
 | **Spatial Stats** | OLS (statsmodels) · Moran's I (esda) · Spatial Error Model (spreg) · libpysal weights |
